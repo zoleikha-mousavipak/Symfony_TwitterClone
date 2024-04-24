@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\UserProfileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -12,6 +13,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+//use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolver as SymfonyOptionsResolver;
+//use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType as SymfonyCheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType as SymfonyPasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType as SymfonyRepeatedType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -19,7 +26,7 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
+            ->add('agreeTerms', SymfonyCheckboxType::class, [
                                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
@@ -27,10 +34,10 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                                // instead of being set onto the object directly,
+            ->add('plainPassword', SymfonyRepeatedType::class, [
+                // instead of being set onto the object directly,
                 // this is read and encoded in the controller
-                'type' => PasswordType::class,
+                'type' => SymfonyPasswordType::class,
                 'mapped' => false,
                 'invalid_message' => 'Password not matched',
                 'first_options' => [
@@ -54,10 +61,10 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-        ;
+            ->add('userProfile', UserProfileType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(SymfonyOptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
